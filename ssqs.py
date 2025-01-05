@@ -1,8 +1,8 @@
 import random
 import matplotlib.pyplot as plt
 
-minInterarrivalRate = 3
-maxInterarrivalRate = 6
+minInterarrivalTime = 3
+maxInterarrivalTime = 6
 
 minServicetime = 10
 maxServicetime = 15
@@ -13,10 +13,10 @@ completiontimeList = []
 waitingtimeList = []
 queuelengthList = []
 
-NumberofCustomer = int(input("Enter the Number of Customer : "))
+NumberofCustomer = int(input())
 
 for i in range(NumberofCustomer):
-    val = random.uniform(minInterarrivalRate, maxInterarrivalRate)
+    val = random.uniform(minInterarrivalTime, maxInterarrivalTime)
     arrivalList.append(val)
     val = random.uniform(minServicetime, maxServicetime)
     servicetimeList.append(val)
@@ -24,37 +24,37 @@ for i in range(NumberofCustomer):
 for i in range(1,NumberofCustomer):
     arrivalList[i] += arrivalList[i-1]
 
-lastdispatcher = 0.0
+lastDispatch = 0.0
 for i in range(NumberofCustomer):
-    startingtime = max(lastdispatcher,arrivalList[i])
-    lastdispatcher = startingtime + servicetimeList[i]
-    completiontimeList.append(lastdispatcher)
+    startingtime = max(lastDispatch,arrivalList[i])
+    lastDispatch = startingtime + servicetimeList[i]
+    completiontimeList.append(lastDispatch)
 
 totalWaitingTime = 0.0
 for i in range(NumberofCustomer):
-    waitingtimeList.append(completiontimeList[i]-arrivalList[i]-servicetimeList[i])
+    waitingtimeList.append(completiontimeList[i]-servicetimeList[i]-arrivalList[i])
     totalWaitingTime += waitingtimeList[i]
 
 startingtime = 0
-lastdispatcher = 0.0
-indexofArrivalList = 0
+lastDispatch = 0.0
+iArrival = 0
 currentQueueLength = 0
 
 for i in range(NumberofCustomer):
-    startingtime = max(arrivalList[i],lastdispatcher)
-    lastdispatcher = startingtime + servicetimeList[i]
+    startingtime = max(arrivalList[i],lastDispatch)
+    lastDispatch = startingtime + servicetimeList[i]
     temlist = []
-    while(indexofArrivalList < NumberofCustomer and arrivalList[indexofArrivalList]<lastdispatcher):
-        temlist.append(arrivalList[indexofArrivalList])
-        if(indexofArrivalList == i):
+    while(iArrival < NumberofCustomer and arrivalList[iArrival]<lastDispatch):
+        temlist.append(arrivalList[iArrival])
+        if(iArrival == i):
             temlist.pop()
-        indexofArrivalList += 1
+        iArrival += 1
     # print(temlist)
-    for ele in temlist:
-        queuelengthList.append([startingtime, ele, currentQueueLength])
+    for i in temlist:
+        queuelengthList.append([startingtime, i, currentQueueLength])
         currentQueueLength += 1
-        startingtime = ele
-    queuelengthList.append([startingtime, lastdispatcher, currentQueueLength])
+        startingtime = i
+    queuelengthList.append([startingtime, lastDispatch, currentQueueLength])
     currentQueueLength -= 1
 
 print(arrivalList)
@@ -76,7 +76,7 @@ for lis in queuelengthList:
         timeofLengths[lis[2]] += (lis[1] - lis[0])
     else:
         timeofLengths[lis[2]] = (lis[1] - lis[0])
-# Calculate and display the average waiting time (delay in queue)
+# Calculate and display the average waiting time (delay in queuindexofArrivalListe)
 
 averageDelay = totalWaitingTime / NumberofCustomer
 print(f'Average Delay in Queue is: {averageDelay}')
